@@ -1,8 +1,5 @@
-from setuptools.config.pyprojecttoml import load_file
-
-import Constants
 from Cell import Cell
-from Constants import SMALL_CELL_NUMBER
+from Constants import SMALL_CELL_NUMBER, BIG_CELL_NUMBER
 
 
 class MiniBoard:
@@ -28,10 +25,10 @@ class MiniBoard:
 
     def update_winner(self):
         for i in range(3):
-            if self.cells[i][0].value == self.cells[i][1].value == self.cells[i][2].value and self.cells[i][0]:
+            if self.cells[i][0].value == self.cells[i][1].value == self.cells[i][2].value and self.cells[i][0].value:
                 self.winner = self.cells[i][0].value
                 return
-            if self.cells[0][i].value == self.cells[1][i].value == self.cells[2][i].value and self.cells[0][i]:
+            if self.cells[0][i].value == self.cells[1][i].value == self.cells[2][i].value and self.cells[0][i].value:
                 self.winner = self.cells[0][i].value
                 return
 

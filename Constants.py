@@ -8,8 +8,12 @@ THICK = 6
 X_THICKNESS = 4
 O_THICKNESS = 4
 
+START_TEXT = ("Willkommen\nbei dem Spiel 'ULTIMATE TIC TAC TOE'.\nKlicken Sie mit der Maus\noder druecken Sie ENTER\n"
+)
+
 COLORS = {
     "BACKGROUND": (255, 255, 255),
+    "TEXT": (0, 0, 0),
     "SMALL_LINE": (71, 74, 80),
     "BIG_LINE": (0, 0, 0),
     "X": (245, 0, 0),

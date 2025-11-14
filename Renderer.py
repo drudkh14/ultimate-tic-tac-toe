@@ -1,24 +1,55 @@
-import pygame.display
-from pygame.mouse import get_pos
+from sndhdr import tests
 
+import pygame.display
 import Constants
-from Game import Game
+import Game
+from Constants import WINDOW_HEIGHT
 
 
 class Renderer:
 
     def __init__(self, screen):
         self.screen = screen
+        pygame.init()
 
-    def draw(self, big_board):
+    def draw(self, game):
         self.screen.fill(Constants.COLORS["BACKGROUND"])
 
-        for big_r in range(3):
-            for big_c in range(3):
-                self.draw_mini_board(big_board, big_r, big_c)
+        if game.board.global_winner:
+            if game.board.global_winner == 'D':
+                end_text = ("Freude hat gewonnen!!!\n"
+                            "Wenn Sie nochmal\nspielen wollen\ndruecken Sie bitte auf 'R'!\n")
+            else:
+                end_text = (f"{game.board.global_winner} hat gewonnen!!!\n"
+                            f"Wenn Sie nochmal\nspielen wollen\ndruecken Sie bitte auf 'R'\n")
+            font = pygame.font.Font(None, 60)
+            self.draw_text(end_text, font)
 
-        self.draw_big_grid()
+        if not game.game_started:
+            font = pygame.font.Font(None, 60)
+            self.draw_text(Constants.START_TEXT, font)
+        elif not game.board.global_winner:
+            for big_row in range(3):
+                for big_col in range(3):
+                    self.draw_mini_board(game.board, big_row, big_col)
+
+            self.draw_big_grid()
         pygame.display.flip()
+
+    def draw_text(self, text, font):
+        lines = text.split("\n")
+        temp_surf = font.render(lines[0], True, Constants.COLORS["TEXT"])
+        line_height = temp_surf.get_height()
+        total_height = len(lines) * line_height - (len(lines) - 1) * Constants.GAP
+        y = (Constants.WINDOW_HEIGHT // 2) - (total_height // 2)
+        for line in lines:
+            text_surf = font.render(line, True, Constants.COLORS["TEXT"])
+            text_rect = text_surf.get_rect()
+            text_rect.centerx = Constants.WINDOW_WIDTH // 2
+            text_rect.top = y
+            self.screen.blit(text_surf, text_rect)
+            y += text_rect.height + Constants.GAP
+
 
     def draw_mini_board(self, big_board, big_row, big_col):
         mini_board = big_board.boards[big_row][big_col]
@@ -26,14 +57,8 @@ class Renderer:
         start_x = Constants.GAP + big_col * Constants.BIG_CELL_SIZE
         start_y = Constants.GAP + big_row * Constants.BIG_CELL_SIZE
 
-        # mouse = pygame.mouse.get_pos()
-        # if mouse[0] - start_x <= Constants.CELL_SIZE and mouse[1] - start_y <= Constants.CELL_SIZE:
-        #     pygame.draw.rect(self.screen, Constants.COLORS["ACTIVE"],
-        #                      (start_x - Constants.GAP, start_y - Constants.GAP,
-        #                       Constants.CELL_SIZE, Constants.CELL_SIZE))
-
         if big_board.active_board == (big_row, big_col):
-                pygame.draw.rect(self.screen, Constants.COLORS["ACTIVE"],
+            pygame.draw.rect(self.screen, Constants.COLORS["ACTIVE"],
                              (start_x - Constants.GAP, start_y - Constants.GAP,
                               Constants.BIG_CELL_SIZE, Constants.BIG_CELL_SIZE))
 
@@ -51,8 +76,6 @@ class Renderer:
                                     Constants.INNER_GAP)
                     elif cell.value == 'O':
                         self.draw_o(start_x, start_y, row, col, Constants.CELL_SIZE // 2, Constants.INNER_GAP)
-
-
 
         self.draw_cell(start_x, start_y)
 
@@ -90,7 +113,7 @@ class Renderer:
     def draw_small_horizontal_lines(self, start_x, start_y):
         pos_Y = start_y + Constants.CELL_SIZE
         end_X = start_x + Constants.CELL_SIZE * Constants.SMALL_CELL_NUMBER + (
-                    Constants.THIN * (Constants.SMALL_CELL_NUMBER - 1))
+                Constants.THIN * (Constants.SMALL_CELL_NUMBER - 1))
         for i in range(Constants.SMALL_CELL_NUMBER - 1):
             pygame.draw.line(self.screen, Constants.COLORS["SMALL_LINE"],
                              (start_x, pos_Y), (end_X, pos_Y), Constants.THIN)
