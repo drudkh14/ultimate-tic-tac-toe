@@ -1,9 +1,6 @@
-from sndhdr import tests
-
 import pygame.display
+
 import Constants
-import Game
-from Constants import WINDOW_HEIGHT
 
 
 class Renderer:
@@ -49,7 +46,6 @@ class Renderer:
             text_rect.top = y
             self.screen.blit(text_surf, text_rect)
             y += text_rect.height + Constants.GAP
-
 
     def draw_mini_board(self, big_board, big_row, big_col):
         mini_board = big_board.boards[big_row][big_col]
