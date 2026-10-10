@@ -37,10 +37,8 @@ pip install pygame
 Run the following command from the project directory:
 
 ```bash
-python main.py
+python Main.py
 ```
-
-Replace `main.py` with the name of the file containing the main game loop if it is different.
 
 ## Controls
 
